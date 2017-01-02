@@ -1,0 +1,14 @@
+<assembly>
+    <formats>
+        <format>zip</format>
+    </formats>
+    <includeBaseDirectory>false</includeBaseDirectory>
+    <fileSets>
+    <fileSet>
+        <includes>
+            <include>alexa-alfresco.js</include>
+            <include>node_modules/**</include>
+        </includes>
+    </fileSet>
+    </fileSets>
+</assembly>
