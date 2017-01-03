@@ -18,7 +18,7 @@ var cmisUrlCloudSelector = "children";
 var cmisUrlCloudobjectId = "fd2d370e-b828-4254-b5bf-b9ae0a4716ad";
 var sitesUrl = cmisUrlCloudRoot + "?objectId=" + cmisUrlCloudobjectId + "&cmisselector=" + cmisUrlCloudSelector + cmisUrlCloudParms;var restUrlCloudUrl = cmisUrlCloudRoot + "?objectId=" + cmisUrlCloudobjectId + "&cmisselector=" + cmisUrlCloudSelector + cmisUrlCloudParms;
 var tasksUrl = "http://" + userId + ":" + password + "@" + host + ":8080/alfresco/api/" + tenant + "/public/workflow/versions/1/tasks";
-var appId = "" /* use an Alexa appid here */
+var appId = ""; /* use an Alexa appid here */
 
 // Route the incoming request based on type (LaunchRequest, IntentRequest,
 // etc.) The JSON body of the request is provided in the event parameter.
@@ -453,19 +453,28 @@ function getCMISUrl(location) {
 
 /*
 Test Connectivity from the Lambda function to the outside
- */
+*/
 function getNetworkResponse(intent, session, callback) {
     console.log("getNetworkResponse");
-    var request = require("request");
-    var speechOutput="";
+    var request1 = require("request");
+    var speechOutput = "";
     var repromptText = null;
     var shouldEndSession = false;
+    // first check if the Lambda function can reach the outside
     var googleURL = "http://www.google.com";
-    console.log("about to try to reach google to test connectivity URL = " + googleURL);
-    request(googleURL, function(error, response, body) {
+    console.log("about to try to reach google to test connectivity with URL = " + googleURL);
+    request1(googleURL, function (error, response, body) {
         console.log("HTTP statusCode = " + response.statusCode);
-        speechOutput += response.statusCode;
-        callback(session.attributes,
-            buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+        speechOutput += "Response from Google was " + response.statusCode + ".   ";
+        // next echo the Lambda IP address
+        var request2 = require("request");
+        request2("http://api.ipify.org", function (error, response, body) {
+            console.log("The Lambda IP Address = " + body);
+            speechOutput += "Network Connection successful.   IP Address is " + body;
+            callback(session.attributes,
+                buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+        })
     })
 }
+
+
