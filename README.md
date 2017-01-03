@@ -72,7 +72,6 @@ outside of its intended purpose.
 * List My Sites
 * List My Tasks
 * Whats up?
-* Approve Task {number}
 * Network test
 
 ### Sample Output
