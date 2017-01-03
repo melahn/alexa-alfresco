@@ -71,8 +71,9 @@ outside of its intended purpose.
 * Hello My name is {name}
 * List My Sites
 * List My Tasks
-* Whats up?
+* What's up?
 * Network test
+* Sing me a song
 
 ### Sample Output
 
