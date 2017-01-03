@@ -67,16 +67,12 @@ outside of its intended purpose.
 
 ### Sample Utterances
 
-* Available Is Alfresco {status}
+* Is Alfresco up?
 * Hello My name is {name}
-* Hello Who am I
-* Goodbye goodbye
-* Document Read document {number}
-* Sites List My Sites
-* UseSite Use the Site {site}
-* TasksList List My Tasks
-* TasksList Whats up
-* TasksApprove Approve Task {number}
+* List My Sites
+* List My Tasks
+* Whats up?
+* Approve Task {number}
 * Network test
 
 ### Sample Output
