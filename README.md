@@ -41,7 +41,7 @@ Go to the AWS Console and define a define a Lambda function like this:
   * Runtime: nodejs
   * Handler: alexa-alfresco.handler 
   * Role: Choose an existing role
-  * Existing role: <the role you defined in step 1>
+  * Existing role: The role you defined in step 1
   * Description: Whatever you want
   * Advanced
     * Choose a VPC (note that there must be a subnet in that VPC connected to an Internet Gateway)
