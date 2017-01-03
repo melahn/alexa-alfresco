@@ -77,5 +77,5 @@ outside of its intended purpose.
 
 ### Sample Output
 
-See https://github.com/melahn/alexa-alfresco/commits/master/samples 
+See https://github.com/melahn/alexa-alfresco/tree/master/samples
 
