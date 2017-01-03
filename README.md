@@ -3,7 +3,9 @@
 ## Overview
 
 This project provides an example of how one can perform some simple voice interactions
-with Alfresco
+with Alfresco.
+
+See the [Concept Document](https://github.com/melahn/alexa-alfresco/blob/master/Alexa%20Alfresco%20Concept.pdf) 
 
 ## Build
 ```
