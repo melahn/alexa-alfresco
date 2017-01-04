@@ -447,7 +447,7 @@ function enumerateSites(sitesObj) {
 function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     return {
         outputSpeech: {
-            type: "PlainText",
+            type: "SSML",
             text: output
         },
         card: {
@@ -457,7 +457,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
         },
         reprompt: {
             outputSpeech: {
-                type: "PlainText",
+                type: "SSML",
                 text: repromptText
             }
         },
