@@ -448,7 +448,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
     return {
         outputSpeech: {
             type: "SSML",
-            ssml: output
+            ssml: "<speak>"+ output + "</speak>"
         },
         card: {
             type: "Simple",
@@ -458,7 +458,7 @@ function buildSpeechletResponse(title, output, repromptText, shouldEndSession) {
         reprompt: {
             outputSpeech: {
                 type: "SSML",
-                ssml: repromptText
+                ssml: "<speak>"+ repromptText + "</speak>"
             }
         },
         shouldEndSession: shouldEndSession
