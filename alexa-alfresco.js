@@ -18,6 +18,7 @@ var cmisUrlCloudSelector = "children";
 var cmisUrlCloudobjectId = "fcb471c7-0bc1-4831-9119-f574a7750884";  // TODO get the root sites folder id dynamically
 var sitesUrl = cmisUrlCloudRoot + "?objectId=" + cmisUrlCloudobjectId + "&cmisselector=" + cmisUrlCloudSelector + cmisUrlCloudParms;var restUrlCloudUrl = cmisUrlCloudRoot + "?objectId=" + cmisUrlCloudobjectId + "&cmisselector=" + cmisUrlCloudSelector + cmisUrlCloudParms;
 var tasksUrl = "http://" + userId + ":" + password + "@" + host + ":8080/alfresco/api/" + tenant + "/public/workflow/versions/1/tasks";
+var taskActionUrl = "http://" + userId + ":" + password + "@" + host + ":8080/alfresco/service/api/task/activiti";
 var appId = ""; /* use an Alexa appid here */ // TODO get this value from configuration
 
 /**
@@ -105,6 +106,12 @@ function onIntent(intentRequest, session, callback) {
         getListOfSitesResponse(intent, session, callback);
     } else if ("TasksList" === intentName) {
         getListOfTasksResponse(intent, session, callback);
+    } else if ("TaskGet" === intentName) {
+        getTaskResponse(intent, session, callback);
+    } else if ("TaskApprove" === intentName) {
+        getTaskActionResponse(intent, session, callback, "Approve");
+    } else if ("TaskReject" === intentName) {
+        getTaskActionResponse(intent, session, callback, "Reject");
     } else if ("UseSite" === intentName) {
         getUseSiteResponse(intent, session, callback);
     } else if ("Network" === intentName) {
@@ -120,12 +127,12 @@ function onIntent(intentRequest, session, callback) {
 
 /**
  * Called when the user ends the session.
- * Is not called when the skill returns shouldEndSession=true.
+ * Is not called when the skill returns shouldEndSession=false.
  */
 function onSessionEnded(sessionEndedRequest, session) {
     console.log("onSessionEnded requestId=" + sessionEndedRequest.requestId +
         ", sessionId=" + session.sessionId);
-    // Add cleanup logic here
+    // Nothing else to do at the moment
 }
 
 /**
@@ -137,13 +144,13 @@ function onSessionEnded(sessionEndedRequest, session) {
  */
 
 function getWelcomeResponse(callback) {
-    // If we wanted to initialize the session to have some attributes we could add those here.
+    console.log("getWelcomeResponse");
     var sessionAttributes = {"name":"Dave Bowman"};  // See 2001, A Space Odyssey
     var cardTitle = "Welcome";
     var speechOutput = "Welcome to the Alfresco 1.0 Echo Example. ";
     // If the user either does not reply to the welcome message or says something that is not
     // understood, they will be prompted again with this text.
-    var repromptText = "Come again?";
+    var repromptText = "I'm not sure I understand that.  Come again?";
     var shouldEndSession = false;
 
     callback(sessionAttributes,
@@ -201,6 +208,7 @@ function getGoodbyeResponse(intent, session, callback) {
  *  Reads a document
  */
 function getDocumentReadResponse(intent, session, callback) {
+   console.log("getDocumentReadResponse");
    var request = require("request");
    var speechOutput="";
    var repromptText = null;
@@ -252,38 +260,120 @@ function getListOfSitesResponse(intent, session, callback) {
  * List the user's Tasks
  */
 function getListOfTasksResponse(intent, session, callback) {
-console.log("getListOfSitesResponse");
-var request = require("request");
-var speechOutput="";
-var repromptText = null;
-var shouldEndSession = false;
-console.log("tasksUrl = " + tasksUrl);
-console.log("about to try to get the list of tasks using URL = " + tasksUrl);
-request(tasksUrl, function(error, response, body) {
-console.log("HTTP statusCode = " + response.statusCode);  
-var numberOfTasks = 0;   
-if (response.statusCode === 200)
-   {
-      console.log("body = " + body);
-      var tasksObj = eval("(" + body + ')');
-      numberOfTasks = countTasks(tasksObj);
-      if (numberOfTasks==0) { 
-    	  speechOutput += "You have no tasks.  Good for you!";    	  
-      }
-      else if (numberOfTasks==1) {
-          speechOutput += "I found your tasks.  You have " + numberOfTasks + " task.";
-          speechOutput += "  Your task is. " + enumerateTasks(tasksObj);
-      } else {
-          speechOutput += "I found your tasks.  You have " + numberOfTasks + " tasks.";
-          speechOutput += "  Your tasks are. " + enumerateTasks(tasksObj);  
-      }
-   } else {
-      speechOutput += "Sorry I could not find a list of Tasks.  Maybe Alfresco is not available or your session has expired";
-   }
-   callback(session.attributes,
-       buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
-})
+    console.log("getListOfTasksResponse");
+    var request = require("request");
+    var speechOutput = "";
+    var repromptText = null;
+    var shouldEndSession = false;
+    console.log("tasksUrl = " + tasksUrl);
+    console.log("about to try to get the list of tasks using URL = " + tasksUrl);
+    request(tasksUrl, function (error, response, body) {
+        console.log("HTTP statusCode = " + response.statusCode);
+        var numberOfTasks = 0;
+        if (response.statusCode === 200) {
+            console.log("body = " + body);
+            var tasksObj = eval("(" + body + ')');
+            numberOfTasks = countTasks(tasksObj);
+            if (numberOfTasks == 0) {
+                speechOutput += "You have no tasks.  Good for you!";
+            }
+            else if (numberOfTasks == 1) {
+                speechOutput += "I found your tasks.  You have " + numberOfTasks + " task.";
+                speechOutput += "  Your task is. " + enumerateTasks(tasksObj);
+            } else {
+                speechOutput += "I found your tasks.  You have " + numberOfTasks + " tasks.";
+                speechOutput += "  Your tasks are. " + enumerateTasks(tasksObj);
+            }
+        } else {
+            speechOutput += "Sorry I could not find a list of Tasks.  Maybe Alfresco is not available or your session has expired";
+        }
+        callback(session.attributes,
+            buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+    })
 }
+/**
+ * Get Details about one Task
+ */
+function getTaskResponse(intent, session, callback) {
+    console.log("getTaskResponse");
+    var request = require("request");
+    var speechOutput = "";
+    var repromptText = null;
+    var shouldEndSession = false;
+    var taskId = intent.slots.task.value;
+    var getTaskUrl = tasksUrl+"/" + taskId;
+    console.log("getTaskUrl = " + getTaskUrl);
+    console.log("about to try to get the task using URL = " + getTaskUrl);
+    request(getTaskUrl, function (error, response, body) {
+        console.log("HTTP statusCode = " + response.statusCode);
+        if (response.statusCode === 200) {
+            speechOutput = "I found your task<break time=\"750ms\"/>";
+            console.log("body = " + body);
+            var taskObj = eval("(" + body + ')');
+            speechOutput += "This is Task Number " + taskObj.entry.processId + "<break time=\"750ms\"/>";
+            if (taskObj.entry.priority == 1) {
+                speechOutput += "It is urgent.  ";
+            }
+            speechOutput += "It is a " + taskObj.entry.activityDefinitionId + "<break time=\"750ms\"/>";
+            speechOutput += "You are being asked to do the following... " + taskObj.entry.description + "<break time=\"750ms\"/>";
+            speechOutput += "The task was started on " + simplifyDate(taskObj.entry.startedAt) + " and is due on " + simplifyDate(taskObj.entry.dueAt) + "<break time=\"750ms\"/>";
+            speechOutput += "Good Luck.";
+        } else if (response.statusCode === 404)
+        {
+            speechOutput += "Sorry I could not that Task.  Please check the task number.  Possibly Alfresco is not available or your session has expired";
+        }
+        else
+        {
+            speechOutput += "Uh oh.  Something went wrong.   Possibly Alfresco is not available or your session has expired";
+        }
+        callback(session.attributes,
+            buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+    })
+}
+
+/**
+ * Take action on a Task
+ */
+function getTaskActionResponse(intent, session, callback, action) {
+    console.log("getTaskResponse for action " + action);
+    var request = require("request");
+    var speechOutput = "";
+    var repromptText = null;
+    var shouldEndSession = false;
+    var taskId = intent.slots.task.value;
+    var taskComment =  action + " using Alexa";
+    console.log("task id = " + taskId);
+    // The RESTful PUT method for approving a task does not seem to work, so do the best you can using the form processor endpoint
+    var taskUrl = taskActionUrl + "$" + taskId + "/formprocessor";
+    console.log("about to try to " + action + " the task using URL = " + taskUrl);
+    body = "{\"prop_wf_reviewOutcome\":\"" + action + "\",\"prop_bpm_comment\":\"" + taskComment + "\",\"prop_transitions\":\"Next\"}";
+    request({
+        url: taskUrl,
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json; charset=UTF-8'
+        },
+        body: body
+    }, function (error, response, body) {
+        if (error) {
+            // TODO would be nice to provide some proper error handling here instead of regurgitating the http status code
+            console.log(error);
+            speechOutput = "Task could not be acted on.   The return code was " + response.statusCode;
+        } else {
+            console.log(response.statusCode, body);
+            if (action == "Approve") {
+                speechOutput = "Task approved";
+            } else if (action == "Reject") {
+                speechOutput = "Task rejected";
+            } else {
+                speechOutput = "Task action taken was " + action;
+            }
+        }
+        callback(session.attributes,
+            buildSpeechletResponse(intent.name, speechOutput, repromptText, shouldEndSession));
+    });
+}
+
 /**
  * Remember what site the user wants.
  */
@@ -391,7 +481,7 @@ function enumerateTasks(tasksObj) {
     var count = tasksObj.list.pagination.totalItems;
     var response = "";
 	for (i = 0; i < count; i++) { 
-		var taskName = "   It is a " + tasksObj.list.entries[i].entry.name + " .  " + tasksObj.list.entries[i].entry.description ;
+		var taskName = "   It is a " + tasksObj.list.entries[i].entry.name + "<break time=\"1000ms\"/>" + tasksObj.list.entries[i].entry.description ;
 		var dueDate = simplifyDate(tasksObj.list.entries[i].entry.dueAt);
 		if (i == 0 || i < count-1) {
 	       response += "Task number: " + tasksObj.list.entries[i].entry.id + ".  " + taskName + ".   It is due on " + dueDate + ".  ";

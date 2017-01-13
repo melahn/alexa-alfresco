@@ -72,8 +72,10 @@ outside of its intended purpose.
 * Is Alfresco up?
 * Hello My name is {name}
 * List My Sites
-* List My Tasks
-* What's up?
+* List My Tasks or What's up?
+* Approve Task {task number}
+* Reject Task {task number}
+* Get Task {task number} or Describe Task {task number}
 * Network test
 * Sing me a song
 
