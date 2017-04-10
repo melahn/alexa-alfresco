@@ -1,0 +1,16 @@
+Available Is Alfresco {status}
+Hello My name is {name}
+Hello Who am I
+Goodbye goodbye
+Document Read document {number}
+Sites List My Sites
+UseSite Use the Site {site}
+TasksList List My Tasks
+TasksList Whats up
+TaskApprove Approve Task {task}
+TaskReject Reject Task {task}
+TaskApprove Disapprove Task {task}
+TaskGet Get Task {task}
+TaskGet Describe Task {task}
+Network test
+Sing song

@@ -1,0 +1,91 @@
+{
+  "intents": [
+    {
+      "slots": [
+        {
+          "name": "name",
+          "type": "ALFRESCO_NAME"
+        }
+      ],
+      "intent": "Hello"
+    },
+    {
+      "slots": [
+        {
+          "name": "status",
+          "type": "ALFRESCO_STATUS"
+        }
+      ],
+      "intent": "Available"
+    },
+    {
+      "slots": [
+        {
+          "name": "number",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "Document"
+    },
+    {
+      "slots": [],
+      "intent": "Sites"
+    },
+    {
+      "slots": [
+        {
+          "name": "site",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "UseSite"
+    },
+    {
+      "slots": [],
+      "intent": "TasksList"
+    },
+    {
+      "slots": [
+        {
+          "name": "task",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "TaskApprove"
+    },
+    {
+      "slots": [
+        {
+          "name": "task",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "TaskGet"
+    },
+    {
+      "slots": [
+        {
+          "name": "task",
+          "type": "AMAZON.NUMBER"
+        }
+      ],
+      "intent": "TaskReject"
+    },
+    {
+      "slots": [],
+      "intent": "Network"
+    },
+    {
+      "slots": [],
+      "intent": "Sing"
+    },
+    {
+      "slots": [],
+      "intent": "Goodbye"
+    },
+    {
+      "slots": [],
+      "intent": "AMAZON.HelpIntent"
+    }
+  ]
+}

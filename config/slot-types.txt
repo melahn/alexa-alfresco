@@ -1,0 +1,2 @@
+ALFRESCO_NAME	admin | gregory	Delete  Edit
+ALFRESCO_STATUS	Up | Down

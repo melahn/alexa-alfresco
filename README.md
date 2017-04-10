@@ -16,6 +16,17 @@ The result is a code package named */target/alexa-alfresco-1.0-SNAPSHOT.zip*
 
 ### Configuration
 
+#### Skill
+
+Go to []AWS Alexa Skills Kit](https://developer.amazon.com/alexa-skills-kit)
+
+* In the *Skills Information* tab, enter a Skill Name and and an Invocation Name 
+* In the *Interaction Model* tab...
+  * Enter an *Intent Schema*.   An example is provided [here](./config/intent-schema.json)
+  * Enter *Custom Slot Types*.   An example is provided [here](./slot-types.txt)
+  * Enter *Sample Utterances*.  An example is provided [here](./sample-utterances.txt)
+* In the *Configuration* tab, enter the arn of the Lambda Function, in the form arn:aws:lambda:us-east-1:xxx:function:Alfresco
+
 #### Lambda
 
 ##### Simple
