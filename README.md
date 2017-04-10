@@ -18,7 +18,7 @@ The result is a code package named */target/alexa-alfresco-1.0-SNAPSHOT.zip*
 
 #### Skill
 
-Go to []AWS Alexa Skills Kit](https://developer.amazon.com/alexa-skills-kit)
+Go to [AWS Alexa Skills Kit](https://developer.amazon.com/alexa-skills-kit)
 
 * In the *Skills Information* tab, enter a Skill Name and and an Invocation Name 
 * In the *Interaction Model* tab...
